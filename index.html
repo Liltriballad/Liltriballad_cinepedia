@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&family=Courier+Prime&family=Bangers&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <style>
+        /* Smooth Color Interpolation for Modern Browsers */
+        @property --bg {
+            syntax: '<color>';
+            initial-value: #0f0f1a;
+            inherits: true;
+        }
+        @property --accent {
+            syntax: '<color>';
+            initial-value: #6a11cb;
+            inherits: true;
+        }
+        @property --accent-light {
+            syntax: '<color>';
+            initial-value: #2575fc;
+            inherits: true;
+        }
+        @property --text {
+            syntax: '<color>';
+            initial-value: #f8f9fa;
+            inherits: true;
+        }
+
+        :root {
+            --accent: #6a11cb;
+            --accent-light: #2575fc;
+            --bg: #0f0f1a;
+            --text: #f8f9fa;
+        }
+
+        /* Refined Global Theme Transition */
+        body, div, header, main, section, aside, footer, button, input, textarea {
+            transition: 
+                background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 3D Contexts */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+
+        /* Enhanced overlapping fix for 3D flip grid */
+        .movie-grid-item {
+            z-index: 1;
+            position: relative;
+            transition: z-index 0s linear 0.7s; 
+        }
+        .movie-grid-item.active-flip {
+            z-index: 100 !important;
+            transition: z-index 0s linear 0s;
+        }
+
+        /* Glint Animation Effect */
+        @keyframes glint {
+            0% { transform: translateX(-150%) skewX(-25deg); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateX(150%) skewX(-25deg); opacity: 0; }
+        }
+        .animate-glint {
+            animation: glint 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Skeleton Pulse Animation */
+        @keyframes skeleton-pulse {
+            0% { background-color: rgba(255, 255, 255, 0.05); }
+            50% { background-color: rgba(255, 255, 255, 0.1); }
+            100% { background-color: rgba(255, 255, 255, 0.05); }
+        }
+        .animate-skeleton {
+            animation: skeleton-pulse 1.5s ease-in-out infinite;
+        }
+
+        /* THEME: VHS MODE */
+        .vhs-mode {
+            --bg: #1e003c;
+            --text: #e0e0e0;
+            --accent: #ff00cc;
+            font-family: 'Courier Prime', monospace;
+        }
+        .vhs-mode::before {
+            content: " ";
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 1000;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        /* THEME: SUPERHERO */
+        .superhero-mode {
+            --bg: #0f1c2e;
+            --accent: #c0392b;
+            font-family: 'Bangers', cursive;
+        }
+        .superhero-mode .bento-item, .superhero-mode .movie-card-front {
+            border: 4px solid #000;
+            box-shadow: 10px 10px 0px #000;
+        }
+
+        /* THEME: ANIME */
+        .anime-mode {
+            --bg: #fff0f5;
+            --text: #4a4a4a;
+            --accent: #ff69b4;
+            background-image: url('https://www.transparenttextures.com/patterns/manga-board.png');
+        }
+
+        /* THEME: GLASS */
+        .glass-mode {
+            --bg: #050510;
+        }
+        .glass-mode .glass-panel {
+            backdrop-filter: blur(25px);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animations */
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee { display: flex; width: max-content; animation: marquee 30s linear infinite; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+
+        @keyframes popup {
+            0% { transform: scale(0.8) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .animate-popup { animation: popup 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        @keyframes toastIn {
+            0% { transform: translateX(100%) scale(0.5); opacity: 0; }
+            70% { transform: translateX(-10%) scale(1.1); opacity: 1; }
+            100% { transform: translateX(0) scale(1); opacity: 1; }
+        }
+        .animate-toast-in { animation: toastIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* Bento Helper */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-auto-rows: 240px;
+            gap: 1.5rem;
+        }
+        .bento-large { grid-row: span 2; grid-column: span 2; }
+        .bento-tall { grid-row: span 2; }
+        .bento-wide { grid-column: span 2; }
+
+        /* No Scrollbar Utility */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @media (max-width: 768px) {
+            .bento-large, .bento-tall, .bento-wide { grid-row: span 1; grid-column: span 1; }
+            .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
+  }
+}
+</script>
+</head>
+<body class="bg-[var(--bg)] text-[var(--text)] overflow-x-hidden selection:bg-[var(--accent)] selection:text-white">
+    <div id="root"></div>
+</body>
+</html>

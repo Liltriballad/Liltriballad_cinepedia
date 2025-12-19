@@ -1,0 +1,7 @@
+{
+  "name": "Cinepedia frontend v4",
+  "description": "An ultimate movie encyclopedia featuring 3D flip cards, multiple immersive themes, and professional library management.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
